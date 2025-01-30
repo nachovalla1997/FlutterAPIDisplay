@@ -1,16 +1,19 @@
-# flutter_api_display
+# **Flutter Public API Data Display**  
 
-A new Flutter project.
+## **Project Overview**  
 
-## Getting Started
+This Flutter application fetches and displays data from a public REST API (`https://jsonplaceholder.typicode.com/posts`). The app follows the **MVVM (Model-View-ViewModel) + Repository** architecture for clean code structure, scalability, and maintainability.
 
-This project is a starting point for a Flutter application.
+## **Project Structure**  
 
-A few resources to get you started if this is your first Flutter project:
+```cmd
+lib/
+│── business_logic/          # Contains ViewModels for state management
+│── models/                  # Defines data models
+│── presentation/            # UI components (screens & widgets)
+│── repositories/            # Implements data fetching logic
+│── repositories_interface/  # Abstract repository interfaces
+│── main.dart                # Entry point of the application
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
