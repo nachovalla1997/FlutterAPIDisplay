@@ -34,6 +34,10 @@ class PostProvider extends ChangeNotifier {
   ///
   /// Handles loading state, pagination, and maintains search filtering
   /// Returns early if already loading or no more posts are available
+  ///
+  /// Parameters:
+  /// * [isRefresh] - Indicates whether to refresh the list (default: false)
+  ///
   Future<void> fetchPosts({bool isRefresh = false}) async {
     if (_state.isLoading || (!_state.hasMore && !isRefresh)) return;
 
