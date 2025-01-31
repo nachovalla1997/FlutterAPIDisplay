@@ -42,9 +42,19 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Scaffold(
             appBar: !_isLoading(state) ? const CustomAppBar() : null,
-            bottomSheet: PostSearchBar(
-                controller: _searchController, provider: provider),
-            body: _buildBody(state, provider),
+            body: Column(
+              children: [
+                Expanded(
+                  child: _buildBody(state, provider),
+                ),
+                !_isLoading(state)
+                    ? PostSearchBar(
+                        controller: _searchController,
+                        provider: provider,
+                      )
+                    : const SizedBox.shrink(),
+              ],
+            ),
           ),
         );
       },
