@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api_display/business_logic/providers/post_state.dart';
 import 'package:flutter_api_display/models/post_model.dart';
+import 'package:flutter_api_display/models/pure_manufacture/get_post_filter.dart';
 import 'package:flutter_api_display/repositories_interface/i_post_repository.dart';
 import 'package:flutter_api_display/utilities/configuration.dart';
 
@@ -74,6 +75,28 @@ class PostProvider extends ChangeNotifier {
         error: error,
         hasMore: isRefresh ? true : _state.hasMore,
       ));
+    }
+  }
+
+  /// Fetches a single post by its ID.
+  ///
+  /// - Sets `isPostLoading` to true while loading.
+  /// - Updates `selectedPost` once loaded.
+  /// - Handles errors if fetching fails.
+  Future<void> fetchPostById(String id) async {
+    _setState(
+        state.copyWith(isPostLoading: true, error: null, selectedPost: null));
+
+    final result = await _postRepository.getPost(
+      GetPostFilter(id: id),
+    );
+
+    if (result.isSuccess()) {
+      _setState(state.copyWith(
+          selectedPost: result.tryGetSuccess(), isPostLoading: false));
+    } else {
+      _setState(
+          state.copyWith(isPostLoading: false, error: result.tryGetError()));
     }
   }
 

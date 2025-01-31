@@ -12,9 +12,12 @@ class JsonPlaceholderRepository implements IPostRepository {
   }) : _remoteConfig = remoteConfig;
 
   @override
-  Future<Result<Post>> getPost(GetPostFilter filter) {
-    // TODO: implement getPost
-    throw UnimplementedError();
+  Future<Result<Post>> getPost(GetPostFilter filter) async {
+    await Future.delayed(const Duration(seconds: 4));
+
+    return Result.success(
+      Post(id: "1", title: "Hello"),
+    );
   }
 
   @override
