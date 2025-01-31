@@ -3,7 +3,7 @@ import 'remote_config.dart';
 class MemoryRemoteConfig implements RemoteConfig {
   final Map<String, dynamic> _configValues = {
     RemoteConfig.featureFlag: false,
-    RemoteConfig.apiBaseUrl: ' https://jsonplaceholder.typicode.com',
+    RemoteConfig.apiBaseUrl: 'https://jsonplaceholder.typicode.com',
   };
 
   @override

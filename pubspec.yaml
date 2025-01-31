@@ -30,9 +30,12 @@ dependencies:
   # Lottie -- Animation
   lottie: ^3.3.1
 
+  # Http -- Network
+  http: ^1.3.0
 
 
   cupertino_icons: ^1.0.8
+
 
 dev_dependencies:
   flutter_test:
