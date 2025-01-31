@@ -34,27 +34,31 @@ class PostProvider extends ChangeNotifier {
   ///
   /// Handles loading state, pagination, and maintains search filtering
   /// Returns early if already loading or no more posts are available
-  Future<void> fetchPosts() async {
-    if (_state.isLoading || !_state.hasMore) return;
+  Future<void> fetchPosts({bool isRefresh = false}) async {
+    if (_state.isLoading || (!_state.hasMore && !isRefresh)) return;
 
-    _setState(_state.copyWith(isLoading: true));
+    _setState(_state.copyWith(
+      isLoading: true,
+      page: isRefresh ? 1 : _state.page,
+      hasMore: isRefresh ? true : _state.hasMore,
+    ));
 
     final result = await _postRepository.getPosts(
       limit: Configuration.kPostsPerPage,
-      page: _state.page,
+      page: isRefresh ? 1 : _state.page,
     );
 
     if (result.isSuccess()) {
       final newPosts = result.tryGetSuccess();
       if (newPosts != null) {
-        final allPosts = [..._state.posts, ...newPosts];
+        final allPosts = isRefresh ? newPosts : [..._state.posts, ...newPosts];
 
         _setState(_state.copyWith(
           posts: allPosts,
           backUpPosts: allPosts,
           isLoading: false,
           hasMore: newPosts.isNotEmpty,
-          page: _state.page + 1,
+          page: isRefresh ? 2 : _state.page + 1,
           error: null,
         ));
       }
@@ -64,6 +68,7 @@ class PostProvider extends ChangeNotifier {
       _setState(_state.copyWith(
         isLoading: false,
         error: error,
+        hasMore: isRefresh ? true : _state.hasMore,
       ));
     }
   }

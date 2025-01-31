@@ -68,7 +68,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (state.error != null && state.posts.isEmpty) {
       return PostErrorWidget(
-          errorMessage: state.error!.message, onRetry: provider.fetchPosts);
+        errorMessage: state.error!.message,
+        onRetry: () => provider.fetchPosts(isRefresh: true),
+      );
     }
 
     return PostListView(provider: provider);

@@ -27,7 +27,7 @@ class PostErrorWidget extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             ElevatedButton.icon(
-              onPressed: onRetry,
+              onPressed: () => onRetry(),
               icon: const Icon(Icons.refresh, size: 20),
               label: const Text("Retry"),
               style: ElevatedButton.styleFrom(

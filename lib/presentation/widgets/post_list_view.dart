@@ -11,26 +11,29 @@ class PostListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = provider.state;
 
-    return ListView.builder(
-      controller: _scrollController(provider),
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      itemCount: state.posts.length + (state.hasMore ? 1 : 0),
-      itemBuilder: (context, index) {
-        if (index == state.posts.length) {
-          if (!provider.isSearching && state.hasMore) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: CircularProgressIndicator(),
-              ),
-            );
+    return RefreshIndicator(
+      onRefresh: () => provider.fetchPosts(isRefresh: true),
+      child: ListView.builder(
+        controller: _scrollController(provider),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        itemCount: state.posts.length + (state.hasMore ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index == state.posts.length) {
+            if (!provider.isSearching && state.hasMore) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
           }
-          return const SizedBox.shrink();
-        }
 
-        final post = state.posts[index];
-        return PostCard(post: post);
-      },
+          final post = state.posts[index];
+          return PostCard(post: post);
+        },
+      ),
     );
   }
 
