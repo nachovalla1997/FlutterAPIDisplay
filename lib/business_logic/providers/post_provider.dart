@@ -1,10 +1,10 @@
-// TODO: Add the proper App Logs.
 import 'package:flutter/material.dart';
 import 'package:flutter_api_display/business_logic/providers/post_state.dart';
 import 'package:flutter_api_display/models/post_model.dart';
 import 'package:flutter_api_display/models/pure_manufacture/get_post_filter.dart';
 import 'package:flutter_api_display/repositories_interface/i_post_repository.dart';
 import 'package:flutter_api_display/utilities/configuration.dart';
+import 'package:flutter_api_display/utilities/logger.dart';
 
 /// A ChangeNotifier that manages the state and business logic for posts.
 ///
@@ -16,13 +16,16 @@ class PostProvider extends ChangeNotifier {
   PostState get state => _state;
 
   PostProvider({required IPostRepository postRepository})
-      : _postRepository = postRepository;
+      : _postRepository = postRepository {
+    AppLogger.info(message: 'PostProvider initialized');
+  }
 
   /// Filters posts based on the search query
   ///
   /// If the query is empty, it shows all posts
   /// Otherwise, filters posts by title (case-insensitive)
   void searchPosts(String query) {
+    AppLogger.debug(message: 'Searching posts with query: "$query"');
     final filteredPosts = _filterPosts(query);
     _setState(
       _state.copyWith(
@@ -30,6 +33,8 @@ class PostProvider extends ChangeNotifier {
         searchQuery: query,
       ),
     );
+    AppLogger.info(
+        message: 'Search completed. Found ${filteredPosts.length} matches');
   }
 
   /// Fetches the next page of posts from the repository
@@ -41,7 +46,16 @@ class PostProvider extends ChangeNotifier {
   /// * [isRefresh] - Indicates whether to refresh the list (default: false)
   ///
   Future<void> fetchPosts({bool isRefresh = false}) async {
-    if (_state.isLoading || (!_state.hasMore && !isRefresh)) return;
+    if (_state.isLoading || (!_state.hasMore && !isRefresh)) {
+      AppLogger.debug(
+          message: 'Fetch posts skipped: loading=${_state.isLoading}, '
+              'hasMore=${_state.hasMore}, isRefresh=$isRefresh');
+      return;
+    }
+
+    AppLogger.info(
+        message: '${isRefresh ? 'Refreshing' : 'Fetching'} posts - '
+            'Page: ${isRefresh ? 1 : _state.page}');
 
     _setState(_state.copyWith(
       isLoading: true,
@@ -59,6 +73,10 @@ class PostProvider extends ChangeNotifier {
       if (newPosts != null) {
         final allPosts = isRefresh ? newPosts : [..._state.posts, ...newPosts];
 
+        AppLogger.info(
+            message: 'Successfully ${isRefresh ? 'refreshed' : 'fetched'} '
+                '${newPosts.length} posts. Total: ${allPosts.length}');
+
         _setState(_state.copyWith(
           posts: allPosts,
           backUpPosts: allPosts,
@@ -70,6 +88,10 @@ class PostProvider extends ChangeNotifier {
       }
     } else {
       final error = result.tryGetError();
+      AppLogger.error(
+        message: 'Failed to fetch posts',
+        error: error,
+      );
 
       _setState(_state.copyWith(
         isLoading: false,
@@ -85,6 +107,8 @@ class PostProvider extends ChangeNotifier {
   /// - Updates `selectedPost` once loaded.
   /// - Handles errors if fetching fails.
   Future<void> fetchPostById(String id) async {
+    AppLogger.info(message: 'Fetching post details for ID: $id');
+
     _setState(
         state.copyWith(isPostLoading: true, error: null, selectedPost: null));
 
@@ -93,11 +117,16 @@ class PostProvider extends ChangeNotifier {
     );
 
     if (result.isSuccess()) {
-      _setState(state.copyWith(
-          selectedPost: result.tryGetSuccess(), isPostLoading: false));
+      final post = result.tryGetSuccess();
+      AppLogger.info(message: 'Successfully fetched post details for ID: $id');
+      _setState(state.copyWith(selectedPost: post, isPostLoading: false));
     } else {
-      _setState(
-          state.copyWith(isPostLoading: false, error: result.tryGetError()));
+      final error = result.tryGetError();
+      AppLogger.error(
+        message: 'Failed to fetch post details for ID: $id',
+        error: error,
+      );
+      _setState(state.copyWith(isPostLoading: false, error: error));
     }
   }
 
@@ -111,13 +140,19 @@ class PostProvider extends ChangeNotifier {
   List<Post> _filterPosts(String query, {List<Post>? posts}) {
     final postsToFilter = posts ?? _state.backUpPosts;
     if (query.trim().isEmpty) {
+      AppLogger.debug(message: 'Filter cleared, showing all posts');
       return postsToFilter;
     }
 
     final lowerCaseQuery = query.toLowerCase();
-    return postsToFilter
+    final filteredPosts = postsToFilter
         .where((post) => post.title.toLowerCase().contains(lowerCaseQuery))
         .toList();
+
+    AppLogger.debug(
+        message: 'Filtered posts by query "$query". '
+            'Found ${filteredPosts.length} matches');
+    return filteredPosts;
   }
 
   /// Updates the state and notifies listeners
