@@ -21,6 +21,12 @@ dependencies:
   # Intl -- Internationalization
   intl: ^0.19.0
 
+  # Provider -- State Management
+  provider: ^6.1.2
+
+  # Result
+  multiple_result: ^5.1.0
+
 
 
   cupertino_icons: ^1.0.8

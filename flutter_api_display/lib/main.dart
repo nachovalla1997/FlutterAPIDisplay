@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api_display/logic_providers.dart';
 import 'package:flutter_api_display/remote_config/initialize_remote_config.dart';
 import 'package:flutter_api_display/remote_config/remote_config.dart';
+import 'package:flutter_api_display/repository_providers.dart';
 import 'package:flutter_api_display/utilities/logger.dart';
 
 void main() async {
@@ -24,15 +26,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter API Display',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return RepositoryProviders.multiRepositoryProvider(
+      child: LogicProviders.multiLogicProvider(
+        child: Container(),
+        context: context,
+        remoteConfig: remoteConfig,
       ),
-      home: Center(
-        child: Text(
-            'Hello World we are calling ${remoteConfig.getString(RemoteConfig.apiBaseUrl)}'),
-      ),
+      remoteConfig: remoteConfig,
+      context: context,
     );
   }
 }
