@@ -91,18 +91,32 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
   Widget _buildPostDetails(PostState state) {
     final post = state.selectedPost!;
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            post.title,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          Text(post.body ?? '', style: const TextStyle(fontSize: 16)),
-        ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              post.title,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              post.body ?? '',
+              style: const TextStyle(
+                fontSize: 16,
+                height: 1.5,
+                color: Colors.black87,
+              ),
+            ),
+            // Add bottom padding to ensure content isn't cut off
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
     );
   }
