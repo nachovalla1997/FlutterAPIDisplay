@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api_display/logic_providers.dart';
 import 'package:flutter_api_display/presentation/application_theme.dart';
-import 'package:flutter_api_display/presentation/home_screen.dart';
+import 'package:flutter_api_display/presentation/screens/home_screen.dart';
 import 'package:flutter_api_display/remote_config/initialize_remote_config.dart';
 import 'package:flutter_api_display/remote_config/remote_config.dart';
 import 'package:flutter_api_display/repository_providers.dart';

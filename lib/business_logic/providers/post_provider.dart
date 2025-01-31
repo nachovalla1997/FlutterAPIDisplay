@@ -28,11 +28,33 @@ class PostProvider extends ChangeNotifier {
     required IPostRepository postRepository,
   }) : _postRepository = postRepository;
 
+  void searchPosts(String query) {
+    if (query.isEmpty) {
+      _state = _state.copyWith(
+        posts: _state.posts,
+        searchQuery: query,
+      );
+      notifyListeners();
+      return;
+    }
+
+    final filteredPosts = _state.posts
+        .where((post) => post.title.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    _state = _state.copyWith(
+      posts: filteredPosts,
+      searchQuery: query,
+    );
+    notifyListeners();
+  }
+
   /// Fetches posts from the repository and updates the state.
   Future<void> fetchPosts() async {
     if (_state.isLoading || !_state.hasMore) return;
 
-    _setState(_state.copyWith(isLoading: true, error: null));
+    _state = _state.copyWith(isLoading: true);
+    notifyListeners();
 
     final result = await _postRepository.getPosts(
       limit: Configuration.kPostsPerPage,
@@ -40,19 +62,26 @@ class PostProvider extends ChangeNotifier {
     );
 
     if (result.isSuccess()) {
-      final posts = result.tryGetSuccess();
+      final newPosts = result.tryGetSuccess();
+      if (newPosts != null) {
+        final allPosts = [..._state.posts, ...newPosts];
+        final filteredPosts = _state.searchQuery.isEmpty
+            ? allPosts
+            : allPosts
+                .where((post) => post.title
+                    .toLowerCase()
+                    .contains(_state.searchQuery.toLowerCase()))
+                .toList();
 
-      if (posts != null) {
-        _setState(_state.copyWith(
-          posts: [..._state.posts, ...posts],
+        _state = _state.copyWith(
+          posts: filteredPosts,
           isLoading: false,
-          hasMore: true,
+          hasMore: newPosts.isNotEmpty,
           page: _state.page + 1,
-        ));
+        );
       }
     }
-
-    // TODO: Handle error state
+    notifyListeners();
   }
 
   /// Internal method to update state and notify UI

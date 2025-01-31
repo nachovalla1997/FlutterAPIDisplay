@@ -33,6 +33,9 @@ class PostState {
   /// The current page number for pagination.
   final int page;
 
+  /// The search query used to filter posts.
+  final String searchQuery;
+
   /// Creates a new immutable instance of `PostState`.
   ///
   /// - [posts] holds the current list of posts.
@@ -42,6 +45,7 @@ class PostState {
   /// - [error] stores any encountered exceptions.
   /// - [hasMore] indicates whether more posts are available for pagination.
   /// - [page] stores the current page number for paginated requests.
+  /// - [searchQuery] holds the current search query for filtering posts.
   PostState({
     required this.posts,
     required this.selectedPost,
@@ -50,6 +54,7 @@ class PostState {
     required this.error,
     required this.hasMore,
     required this.page,
+    required this.searchQuery,
   });
 
   /// Returns the initial state with default values.
@@ -62,6 +67,7 @@ class PostState {
       error: null,
       hasMore: true,
       page: 1,
+      searchQuery: '',
     );
   }
 
@@ -83,6 +89,7 @@ class PostState {
     BaseException? error,
     bool? hasMore,
     int? page,
+    String? searchQuery,
   }) {
     return PostState(
       posts: posts ?? this.posts,
@@ -92,6 +99,7 @@ class PostState {
       error: error,
       hasMore: hasMore ?? this.hasMore,
       page: page ?? this.page,
+      searchQuery: searchQuery ?? this.searchQuery,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api_display/business_logic/providers/post_provider.dart';
 import 'package:flutter_api_display/business_logic/providers/post_state.dart';
+import 'package:flutter_api_display/presentation/screens/loading_screen.dart';
 import 'package:flutter_api_display/presentation/screens/post_details_screen.dart';
 import 'package:flutter_api_display/utilities/configuration.dart';
 import 'package:lottie/lottie.dart';
@@ -37,54 +38,55 @@ class _HomeScreenState extends State<HomeScreen> {
         final state = provider.state;
 
         return Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              "Posts",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-            ),
-            centerTitle: true,
-            elevation: 5,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF007AFF), Color(0xFF0056D2)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(60),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: provider.searchPosts,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    hintText: 'Search posts...',
-                    hintStyle: const TextStyle(color: Colors.white70),
-                    prefixIcon: const Icon(Icons.search, color: Colors.white70),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? IconButton(
-                            icon:
-                                const Icon(Icons.clear, color: Colors.white70),
-                            onPressed: () {
-                              _searchController.clear();
-                              provider.searchPosts('');
-                            },
-                          )
-                        : null,
-                    filled: true,
-                    fillColor: Colors.white24,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
+          appBar: !_isLoading(state)
+              ? AppBar(
+                  title: const Text(
+                    "Posts",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                  ),
+                  centerTitle: true,
+                  elevation: 5,
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF007AFF), Color(0xFF0056D2)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
+                  ),
+                )
+              : null,
+          bottomSheet: PreferredSize(
+            preferredSize: const Size.fromHeight(60),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: TextField(
+                controller: _searchController,
+                onChanged: provider.searchPosts,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'Search posts...',
+                  hintStyle: const TextStyle(color: Colors.white70),
+                  prefixIcon: const Icon(Icons.search, color: Colors.white70),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, color: Colors.white70),
+                          onPressed: () {
+                            _searchController.clear();
+                            provider.searchPosts('');
+                          },
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: Colors.white24,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
                   ),
                 ),
               ),
@@ -98,10 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBody(
       BuildContext context, PostState state, PostProvider provider) {
-    if (state.isLoading && state.posts.isEmpty) {
-      return Center(
-        child: Lottie.asset(Configuration.kPathToLoadingAnimation, width: 200),
-      );
+    if (_isLoading(state)) {
+      return LoadingScreen();
     }
 
     if (state.error != null && state.posts.isEmpty) {
@@ -199,6 +199,8 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
+  bool _isLoading(PostState state) => state.isLoading && state.posts.isEmpty;
 
   ScrollController _scrollController(
       BuildContext context, PostProvider provider) {
