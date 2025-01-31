@@ -5,9 +5,13 @@ import 'package:flutter_api_display/core/result.dart';
 import 'package:flutter_api_display/models/post_model.dart';
 import 'package:flutter_api_display/models/pure_manufacture/get_post_filter.dart';
 import 'package:flutter_api_display/remote_config/remote_config.dart';
+import 'package:flutter_api_display/repositories/api_endpoints.dart';
+import 'package:flutter_api_display/repositories/api_errors.dart';
+import 'package:flutter_api_display/repositories/api_status_code.dart';
 import 'package:flutter_api_display/repositories_interface/i_post_repository.dart';
 import 'package:http/http.dart' as http;
 
+/// Repository implementation for interacting with the JSONPlaceholder API.
 class JsonPlaceholderRepository implements IPostRepository {
   final RemoteConfig _remoteConfig;
   final http.Client _client;
@@ -24,29 +28,25 @@ class JsonPlaceholderRepository implements IPostRepository {
   Future<Result<Post>> getPost(GetPostFilter filter) async {
     try {
       final response = await _client.get(
-        Uri.parse('$_baseUrl/posts/${filter.id}'),
+        Uri.parse('$_baseUrl${ApiEndpoints.getPostDetails(filter.id)}'),
       );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        return Result.success(
-          Post(
-            id: data['id'].toString(),
-            title: data['title'],
-            body: data['body'],
-          ),
-        );
-      } else {
-        return Result.error(
-          BaseException(
-            'Failed to fetch post. Status code: ${response.statusCode}',
-            response.statusCode,
-          ),
-        );
+      if (response.statusCode == ApiStatusCode.success) {
+        return Result.success(_parsePost(response.body));
       }
+
+      return Result.error(
+        BaseException(
+          ApiErrors.fetchPostFailed(response.statusCode),
+          response.statusCode,
+        ),
+      );
     } catch (e) {
       return Result.error(
-        BaseException('Error fetching post: ${e.toString()}', 500),
+        BaseException(
+          ApiErrors.fetchPostError(e.toString()),
+          ApiStatusCode.internalError,
+        ),
       );
     }
   }
@@ -57,40 +57,50 @@ class JsonPlaceholderRepository implements IPostRepository {
     required int limit,
   }) async {
     try {
-      // Calculate start and end indices for pagination
       final start = (page - 1) * limit;
 
       final response = await _client.get(
-        Uri.parse('$_baseUrl/posts?_start=$start&_limit=$limit'),
+        Uri.parse('$_baseUrl${ApiEndpoints.getPostsList(start, limit)}'),
       );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        final posts = data
-            .map((post) => Post(
-                  id: post['id'].toString(),
-                  title: post['title'],
-                  body: post['body'],
-                ))
-            .toList();
-
-        return Result.success(posts);
-      } else {
-        return Result.error(
-          BaseException(
-            'Failed to fetch posts. Status code: ${response.statusCode}',
-            response.statusCode,
-          ),
-        );
+      if (response.statusCode == ApiStatusCode.success) {
+        return Result.success(_parsePosts(response.body));
       }
+
+      return Result.error(
+        BaseException(
+          ApiErrors.fetchPostsFailed(response.statusCode),
+          response.statusCode,
+        ),
+      );
     } catch (e) {
       return Result.error(
         BaseException(
-          'Error fetching posts: ${e.toString()}',
-          500,
+          ApiErrors.fetchPostsError(e.toString()),
+          ApiStatusCode.internalError,
         ),
       );
     }
+  }
+
+  Post _parsePost(String responseBody) {
+    final Map<String, dynamic> data = json.decode(responseBody);
+    return Post(
+      id: data['id'].toString(),
+      title: data['title'],
+      body: data['body'],
+    );
+  }
+
+  List<Post> _parsePosts(String responseBody) {
+    final List<dynamic> data = json.decode(responseBody);
+    return data
+        .map((post) => Post(
+              id: post['id'].toString(),
+              title: post['title'],
+              body: post['body'],
+            ))
+        .toList();
   }
 
   void dispose() {
