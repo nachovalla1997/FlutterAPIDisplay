@@ -1,3 +1,4 @@
+// TODO: Add the proper App Logs.
 import 'package:flutter/material.dart';
 import 'package:flutter_api_display/business_logic/providers/post_state.dart';
 import 'package:flutter_api_display/models/post_model.dart';
@@ -113,8 +114,9 @@ class PostProvider extends ChangeNotifier {
       return postsToFilter;
     }
 
+    final lowerCaseQuery = query.toLowerCase();
     return postsToFilter
-        .where((post) => post.title.toLowerCase().contains(query.toLowerCase()))
+        .where((post) => post.title.toLowerCase().contains(lowerCaseQuery))
         .toList();
   }
 

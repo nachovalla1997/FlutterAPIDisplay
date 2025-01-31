@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api_display/business_logic/providers/post_provider.dart';
 import 'package:flutter_api_display/business_logic/providers/post_state.dart';
+import 'package:flutter_api_display/presentation/widgets/post_error_widget.dart';
+import 'package:flutter_api_display/presentation/widgets/post_info_widget.dart';
 import 'package:flutter_api_display/utilities/configuration.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -69,45 +71,19 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
 
   /// Displays an error message with a retry button.
   Widget _buildError(BuildContext context, PostProvider provider) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Lottie.asset(Configuration.kPathToErrorAnimation, width: 180),
-            const SizedBox(height: 10),
-            Text(
-              "Failed to load post",
-              style: const TextStyle(
-                  color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton.icon(
-              onPressed: () => provider.fetchPostById(widget.postId),
-              icon: const Icon(Icons.refresh, size: 20),
-              label: const Text("Retry"),
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                backgroundColor: Colors.redAccent,
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return PostErrorWidget(
+        errorMessage: provider.state.error!.message,
+        onRetry: () {
+          provider.fetchPostById(widget.postId);
+        });
   }
 
   /// Shows a "Post Not Found" message if the post doesn't exist.
   Widget _buildNotFound() {
-    return const Center(
-      child: Text("Post not found",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+    return PostInfoWidget(
+      message: "The post you are looking for was not found.",
+      actionLabel: "Go Back",
+      onAction: () => Navigator.pop(context),
     );
   }
 

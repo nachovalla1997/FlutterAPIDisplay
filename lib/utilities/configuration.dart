@@ -9,4 +9,8 @@ class Configuration {
 
   /// The path to the error animation asset
   static const String kPathToErrorAnimation = "assets/animations/error.json";
+
+  ///
+  static const String kPathToNoDataFoundAnimation =
+      "assets/animations/no_data_found.json"; 
 }

@@ -4,6 +4,7 @@ import 'package:flutter_api_display/business_logic/providers/post_state.dart';
 import 'package:flutter_api_display/presentation/screens/loading_screen.dart';
 import 'package:flutter_api_display/presentation/widgets/custom_app_bar.dart';
 import 'package:flutter_api_display/presentation/widgets/post_error_widget.dart';
+import 'package:flutter_api_display/presentation/widgets/post_info_widget.dart';
 import 'package:flutter_api_display/presentation/widgets/post_list_view.dart';
 import 'package:flutter_api_display/presentation/widgets/post_search_bar.dart';
 import 'package:provider/provider.dart';
@@ -61,23 +62,40 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  bool _shouldShowSearchBar(PostState state) =>
-      !_isLoading(state) && state.posts.isNotEmpty;
-
   Widget _buildBody(PostState state, PostProvider provider) {
     if (_isLoading(state)) {
       return const LoadingScreen();
     }
 
-    if (state.error != null && state.posts.isEmpty) {
+    if (_shouldShowError(state)) {
       return PostErrorWidget(
         errorMessage: state.error!.message,
         onRetry: () => provider.fetchPosts(isRefresh: true),
       );
     }
 
+    if (_shouldShowNoPostFound(state)) {
+      return PostInfoWidget(
+        message: 'No posts found for "${state.searchQuery}"',
+        actionLabel: 'Clear Search',
+        onAction: () => {
+          provider.searchPosts(''),
+          _searchController.clear(),
+        },
+      );
+    }
+
     return PostListView(provider: provider);
   }
+
+  bool _shouldShowNoPostFound(PostState state) =>
+      state.posts.isEmpty && state.searchQuery.isNotEmpty;
+
+  bool _shouldShowError(PostState state) =>
+      state.error != null && state.posts.isEmpty;
+
+  bool _shouldShowSearchBar(PostState state) =>
+      !_isLoading(state) && state.error == null;
 
   bool _isLoading(PostState state) => state.isLoading && state.posts.isEmpty;
 }
