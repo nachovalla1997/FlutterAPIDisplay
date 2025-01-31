@@ -37,3 +37,15 @@ This Flutter application fetches and displays data from a public REST API (`http
   - Bootstraps the widget tree with repository and logic providers
 
 ---
+
+### **🚀 Next Steps (Features Not Implemented Yet)**  
+
+To further enhance the app, the following features should be implemented:  
+
+✅ **Offline Caching** → Store fetched posts locally to reduce API calls and support offline access.  
+✅ **Localization Support** → Add support for multiple languages using Flutter’s `intl` package.  
+✅ **Unit & Widget Testing** → Write tests for `PostProvider`, API calls, and UI components.  
+✅ **Post Details Caching** → Cache previously viewed posts to avoid re-fetching the same data.  
+✅ **Accessibility Improvements** → Ensure proper screen reader support and text scaling options.  
+✅ **Smooth Animations & Transitions** → Add animations and smooth page transitions for better UX.
+✅ **App Icon** → Design and set a custom app icon to enhance the app's visual identity and make it easily recognizable on users' devices.
