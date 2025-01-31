@@ -38,11 +38,14 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, provider, child) {
         final state = provider.state;
 
-        return Scaffold(
-          appBar: !_isLoading(state) ? const CustomAppBar() : null,
-          bottomSheet:
-              PostSearchBar(controller: _searchController, provider: provider),
-          body: _buildBody(state, provider),
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            appBar: !_isLoading(state) ? const CustomAppBar() : null,
+            bottomSheet: PostSearchBar(
+                controller: _searchController, provider: provider),
+            body: _buildBody(state, provider),
+          ),
         );
       },
     );
