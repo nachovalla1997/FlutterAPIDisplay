@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_api_display/core/base_exception.dart';
 import 'package:flutter_api_display/models/post_model.dart';
 
@@ -11,7 +12,7 @@ import 'package:flutter_api_display/models/post_model.dart';
 /// - Pagination control (`hasMore` and `page`).
 ///
 /// The state is **immutable**, and updates are handled through `copyWith()`.
-class PostState {
+class PostState extends Equatable {
   /// List of posts currently loaded.
   final List<Post> posts;
 
@@ -50,7 +51,7 @@ class PostState {
   /// - [page] stores the current page number for paginated requests.
   /// - [searchQuery] holds the current search query for filtering posts.
   /// - [backUpPosts] stores a backup list of posts for search filtering.
-  PostState({
+  const PostState({
     required this.posts,
     required this.selectedPost,
     required this.isLoading,
@@ -110,4 +111,17 @@ class PostState {
       backUpPosts: backUpPosts ?? this.backUpPosts,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        posts,
+        selectedPost,
+        isLoading,
+        isPostLoading,
+        error,
+        hasMore,
+        page,
+        searchQuery,
+        backUpPosts,
+      ];
 }
