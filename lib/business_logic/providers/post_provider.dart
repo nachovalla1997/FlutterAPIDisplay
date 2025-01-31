@@ -21,7 +21,7 @@ class PostProvider extends ChangeNotifier {
   /// If the query is empty, it shows all posts
   /// Otherwise, filters posts by title (case-insensitive)
   void searchPosts(String query) {
-    final filteredPosts =_filterPosts(query);
+    final filteredPosts = _filterPosts(query);
     _setState(
       _state.copyWith(
         posts: filteredPosts,
@@ -91,4 +91,6 @@ class PostProvider extends ChangeNotifier {
     _state = newState;
     notifyListeners();
   }
+
+  bool get isSearching => _state.searchQuery.isNotEmpty;
 }
