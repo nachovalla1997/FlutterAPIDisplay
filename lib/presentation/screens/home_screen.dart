@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: _buildBody(state, provider),
                 ),
-                !_isLoading(state)
+                _shouldShowSearchBar(state)
                     ? PostSearchBar(
                         controller: _searchController,
                         provider: provider,
@@ -60,6 +60,9 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
+  bool _shouldShowSearchBar(PostState state) =>
+      !_isLoading(state) && state.posts.isNotEmpty;
 
   Widget _buildBody(PostState state, PostProvider provider) {
     if (_isLoading(state)) {
