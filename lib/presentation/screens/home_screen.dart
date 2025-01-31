@@ -7,6 +7,7 @@ import 'package:flutter_api_display/presentation/widgets/post_error_widget.dart'
 import 'package:flutter_api_display/presentation/widgets/post_info_widget.dart';
 import 'package:flutter_api_display/presentation/widgets/post_list_view.dart';
 import 'package:flutter_api_display/presentation/widgets/post_search_bar.dart';
+import 'package:flutter_api_display/utilities/configuration.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -64,7 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBody(PostState state, PostProvider provider) {
     if (_isLoading(state)) {
-      return const LoadingScreen();
+      return const LoadingScreen(
+        animationPath: Configuration.kPathToLoadingPostsAnimation,
+        animationSize: 600,
+      );
     }
 
     if (_shouldShowError(state)) {
