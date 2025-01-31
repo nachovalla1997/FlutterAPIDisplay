@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api_display/logic_providers.dart';
+import 'package:flutter_api_display/presentation/application_theme.dart';
 import 'package:flutter_api_display/presentation/home_screen.dart';
 import 'package:flutter_api_display/remote_config/initialize_remote_config.dart';
 import 'package:flutter_api_display/remote_config/remote_config.dart';
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Flutter API Display',
           home: const HomeScreen(),
+          theme: ApplicationTheme.lightTheme,
+          darkTheme: ApplicationTheme.darkTheme,
+          themeMode: ThemeMode.system,
         ),
         context: context,
         remoteConfig: remoteConfig,
