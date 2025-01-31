@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api_display/business_logic/providers/post_provider.dart';
 import 'package:flutter_api_display/business_logic/providers/post_state.dart';
-import 'package:flutter_api_display/presentation/screens/loading_screen.dart';
+import 'package:flutter_api_display/presentation/widgets/loading_widget.dart';
 import 'package:flutter_api_display/presentation/widgets/custom_app_bar.dart';
 import 'package:flutter_api_display/presentation/widgets/post_error_widget.dart';
 import 'package:flutter_api_display/presentation/widgets/post_info_widget.dart';
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBody(PostState state, PostProvider provider) {
     if (_isLoading(state)) {
-      return const LoadingScreen(
+      return const LoadingWidget(
         animationPath: Configuration.kPathToLoadingPostsAnimation,
         animationSize: 600,
       );

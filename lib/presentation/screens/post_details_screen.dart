@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api_display/business_logic/providers/post_provider.dart';
 import 'package:flutter_api_display/business_logic/providers/post_state.dart';
-import 'package:flutter_api_display/presentation/screens/loading_screen.dart';
+import 'package:flutter_api_display/presentation/widgets/loading_widget.dart';
 import 'package:flutter_api_display/presentation/widgets/post_error_widget.dart';
 import 'package:flutter_api_display/presentation/widgets/post_info_widget.dart';
 import 'package:provider/provider.dart';
@@ -63,7 +63,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
 
   /// Shows a loading animation while fetching the post.
   Widget _buildLoading() {
-    return const LoadingScreen(
+    return const LoadingWidget(
       animationSize: 300,
       enablePulse: false,
     );

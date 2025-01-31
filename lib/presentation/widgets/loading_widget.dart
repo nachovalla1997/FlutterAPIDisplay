@@ -11,7 +11,7 @@ import 'package:lottie/lottie.dart';
 ///
 /// The pulsing effect is controlled by [enablePulse] and creates a subtle
 /// scaling animation that repeats continuously.
-class LoadingScreen extends StatefulWidget {
+class LoadingWidget extends StatefulWidget {
   /// Optional message to display below the loading animation
   final String? message;
 
@@ -24,14 +24,14 @@ class LoadingScreen extends StatefulWidget {
   /// Whether to enable the pulsing animation effect
   final bool enablePulse;
 
-  /// Creates a loading screen with customizable properties.
+  /// Creates a loading widget with customizable properties.
   ///
   /// Parameters:
   /// * [message] - Optional text to display below the animation
   /// * [animationPath] - Path to the Lottie animation file (defaults to loading animation)
   /// * [animationSize] - Size of the animation (defaults to 200)
   /// * [enablePulse] - Whether to enable the pulsing effect (defaults to true)
-  const LoadingScreen({
+  const LoadingWidget({
     super.key,
     this.message,
     this.animationPath = Configuration.kPathToLoadingAnimation,
@@ -40,10 +40,10 @@ class LoadingScreen extends StatefulWidget {
   });
 
   @override
-  State<LoadingScreen> createState() => _LoadingScreenState();
+  State<LoadingWidget> createState() => _LoadingWidgetState();
 }
 
-class _LoadingScreenState extends State<LoadingScreen>
+class _LoadingWidgetState extends State<LoadingWidget>
     with SingleTickerProviderStateMixin {
   /// Controller for the pulsing animation
   late AnimationController _animationController;
