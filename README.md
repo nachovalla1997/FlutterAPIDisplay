@@ -38,14 +38,50 @@ This Flutter application fetches and displays data from a public REST API (`http
 
 ---
 
+## **Testing Guide**
+
+### **Running Tests**
+
+```bash
+# Run all tests
+flutter test
+
+# Run a specific test file
+flutter test test/post_provider_test.dart
+```
+
+### **Updating Mock Classes**
+
+When you modify interfaces or add new methods to repositories, you'll need to regenerate the mock classes:
+
+```bash
+# Generate/update mock classes
+dart run build_runner build
+
+# Generate mocks and watch for changes
+dart run build_runner watch
+```
+
+### **Test Files Structure**
+
+- `test/post_provider_test.dart` - Tests for PostProvider business logic
+- `test/mocks/` - Contains generated mock classes
+
+### **Best Practices**
+
+- Run `dart run build_runner build` after modifying any repository interfaces
+- Keep test files organized by feature/component
+- Use meaningful test descriptions
+- Follow the Arrange-Act-Assert pattern in test cases
+
+---
+
 ### **🚀 Next Steps (Features Not Implemented Yet)**  
 
 To further enhance the app, the following features should be implemented:  
 
 ✅ **Offline Caching** → Store fetched posts locally to reduce API calls and support offline access.  
 ✅ **Localization Support** → Add support for multiple languages using Flutter’s `intl` package.  
-✅ **Unit & Widget Testing** → Write tests for `PostProvider`, API calls, and UI components.  
 ✅ **Post Details Caching** → Cache previously viewed posts to avoid re-fetching the same data.  
-✅ **Accessibility Improvements** → Ensure proper screen reader support and text scaling options.  
 ✅ **Smooth Animations & Transitions** → Add animations and smooth page transitions for better UX.
 ✅ **App Icon** → Design and set a custom app icon to enhance the app's visual identity and make it easily recognizable on users' devices.
