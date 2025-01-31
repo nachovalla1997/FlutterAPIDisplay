@@ -1,58 +1,99 @@
+import 'dart:convert';
+
+import 'package:flutter_api_display/core/base_exception.dart';
 import 'package:flutter_api_display/core/result.dart';
 import 'package:flutter_api_display/models/post_model.dart';
 import 'package:flutter_api_display/models/pure_manufacture/get_post_filter.dart';
 import 'package:flutter_api_display/remote_config/remote_config.dart';
 import 'package:flutter_api_display/repositories_interface/i_post_repository.dart';
+import 'package:http/http.dart' as http;
 
 class JsonPlaceholderRepository implements IPostRepository {
   final RemoteConfig _remoteConfig;
+  final http.Client _client;
 
-  const JsonPlaceholderRepository({
+  JsonPlaceholderRepository({
     required RemoteConfig remoteConfig,
-  }) : _remoteConfig = remoteConfig;
+    http.Client? client,
+  })  : _remoteConfig = remoteConfig,
+        _client = client ?? http.Client();
+
+  String get _baseUrl => _remoteConfig.getString(RemoteConfig.apiBaseUrl);
 
   @override
   Future<Result<Post>> getPost(GetPostFilter filter) async {
-    await Future.delayed(const Duration(seconds: 4));
+    try {
+      final response = await _client.get(
+        Uri.parse('$_baseUrl/posts/${filter.id}'),
+      );
 
-    return Result.success(
-      Post(
-          id: "1",
-          title:
-              "Hello my best friend jnkcjnck ewnkjcewkjn ckwenkcjnwkjck wejn ckjenckjwen kcjnewkjc kewnckjnwe kjcnwe kjcnkwejnckjwen ckwejn ckjwenckjwen kcjwen kcjnwekcjnwe kjcnew kjcnwekjnckewjn ckjewn ckjwen kjcnwe kjcnew k",
-          body:
-              "nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp nvkjnkvjnvjndnv  nj vj nskjvn jdsnvkjd nvjds nvkjsdnkvjns jvn kdjsn vkjsnd kvjnds kjvn kdjnsvkjdn skjvndskjvn ksdj nvkjsdn vkjdsn kvjsdn kvjn dskjvn sdkjnv ksdjn vkjsdn vkjdsn vkjdns kvjn dskjvn sdkjvn skdjvn kdsjn vksjdnv kjsdn vkjdsn kvjnsdvjslkdvmflkjnvl kesjrnvlkjtsn lvkjesn vljkrn lvjkrn l nvk nkjnkjnwkjvn dkjnv kjdn kvjnsdkjvnksjndv kjsdnv kjndk vjns kdjvnkdsjnvk jsdnvk jns kdjvn kdshjvb kjhabv rjekhnv pjrvl janvlk jrnev lkjns kljvn lkjanv lkwajnv lkjanvlkjanv lkajn vkjnakl jen vljnlkvjnerkljvnerklhvbrelivbnerijbnvrlk ejn lkjrn lkjrnev lkjrenv lkjrenvlkejrnvlkjernvlkjernv lkjern vkljern vkjern vkjernv kjernv kjernvkjernvkjfndkvjn dfkjvn kjern vkjrn vkjren vkjenr kjvn rekjvnerkjnv kjnv;jznvl kajrnljknv lsjnv lkjsnv prkjnv prajnva eijnv iroebv jsnbvikjsnbvi jsrebnv ireuvnireu nvurenvpreiuahvipauerhvipuerahv paiuhv piruah vpurhavpiuerhv peraiuhv pieaurhv paiuerh vpaiuerhvpaiuhrv piauhv paieuhv piaueh vpiauehv piaeurhv peiruhv paeiuhv paeiurhv praeiuvh erpaiuhv rp "),
-    );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return Result.success(
+          Post(
+            id: data['id'].toString(),
+            title: data['title'],
+            body: data['body'],
+          ),
+        );
+      } else {
+        return Result.error(
+          BaseException(
+            'Failed to fetch post. Status code: ${response.statusCode}',
+            response.statusCode,
+          ),
+        );
+      }
+    } catch (e) {
+      return Result.error(
+        BaseException('Error fetching post: ${e.toString()}', 500),
+      );
+    }
   }
 
   @override
-  Future<Result<List<Post>>> getPosts(
-      {required int page, required int limit}) async {
-    await Future.delayed(const Duration(seconds: 4));
+  Future<Result<List<Post>>> getPosts({
+    required int page,
+    required int limit,
+  }) async {
+    try {
+      // Calculate start and end indices for pagination
+      final start = (page - 1) * limit;
 
-    return Result.success(
-      [
-        Post(id: "1", title: "Hello"),
-        Post(id: "2", title: "World"),
-        Post(id: "3", title: "Flutter"),
-        Post(id: "4", title: "API"),
-        Post(id: "5", title: "Display"),
-        Post(id: "6", title: "App"),
-        Post(id: "7", title: "JSON"),
-        Post(id: "8", title: "Placeholder"),
-        Post(id: "9", title: "Repository"),
-        Post(id: "10", title: "Provider"),
-        Post(id: "11", title: "State"),
-        Post(id: "12", title: "Model"),
-        Post(id: "13", title: "Filter"),
-        Post(id: "14", title: "Remote Config"),
-        Post(id: "15", title: "Utilities"),
-        Post(id: "16", title: "Logger"),
-        Post(id: "17", title: "Initialize"),
-        Post(id: "18", title: "Multi"),
-        Post(id: "19", title: "Single"),
-        Post(id: "20", title: "ChangeNotifier"),
-      ],
-    );
+      final response = await _client.get(
+        Uri.parse('$_baseUrl/posts?_start=$start&_limit=$limit'),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        final posts = data
+            .map((post) => Post(
+                  id: post['id'].toString(),
+                  title: post['title'],
+                  body: post['body'],
+                ))
+            .toList();
+
+        return Result.success(posts);
+      } else {
+        return Result.error(
+          BaseException(
+            'Failed to fetch posts. Status code: ${response.statusCode}',
+            response.statusCode,
+          ),
+        );
+      }
+    } catch (e) {
+      return Result.error(
+        BaseException(
+          'Error fetching posts: ${e.toString()}',
+          500,
+        ),
+      );
+    }
+  }
+
+  void dispose() {
+    _client.close();
   }
 }
