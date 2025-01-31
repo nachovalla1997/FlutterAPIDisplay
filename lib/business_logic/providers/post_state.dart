@@ -36,6 +36,9 @@ class PostState {
   /// The search query used to filter posts.
   final String searchQuery;
 
+  /// A backup list of posts filtered by the search query.
+  final List<Post> backUpPosts;
+
   /// Creates a new immutable instance of `PostState`.
   ///
   /// - [posts] holds the current list of posts.
@@ -46,6 +49,7 @@ class PostState {
   /// - [hasMore] indicates whether more posts are available for pagination.
   /// - [page] stores the current page number for paginated requests.
   /// - [searchQuery] holds the current search query for filtering posts.
+  /// - [backUpPosts] stores a backup list of posts for search filtering.
   PostState({
     required this.posts,
     required this.selectedPost,
@@ -55,6 +59,7 @@ class PostState {
     required this.hasMore,
     required this.page,
     required this.searchQuery,
+    required this.backUpPosts,
   });
 
   /// Returns the initial state with default values.
@@ -68,6 +73,7 @@ class PostState {
       hasMore: true,
       page: 1,
       searchQuery: '',
+      backUpPosts: [],
     );
   }
 
@@ -90,6 +96,7 @@ class PostState {
     bool? hasMore,
     int? page,
     String? searchQuery,
+    List<Post>? backUpPosts,
   }) {
     return PostState(
       posts: posts ?? this.posts,
@@ -100,6 +107,7 @@ class PostState {
       hasMore: hasMore ?? this.hasMore,
       page: page ?? this.page,
       searchQuery: searchQuery ?? this.searchQuery,
+      backUpPosts: backUpPosts ?? this.backUpPosts,
     );
   }
 }
