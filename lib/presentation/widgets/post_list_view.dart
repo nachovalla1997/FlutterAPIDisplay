@@ -83,14 +83,18 @@ class PostListView extends StatelessWidget {
   ///
   /// Returns true if:
   /// - The user is not currently searching
-  /// - The scroll position is at the maximum extent (bottom of the list)
+  /// - The scroll position has passed the threshold (80% of the scroll extent)
   ///
   /// Parameters:
   /// * [provider] - The post provider to check search state
   /// * [controller] - The scroll controller to check position
   bool _shouldFetchMore(PostProvider provider, ScrollController controller) {
-    // TODO: Fetch on the middle of the screen
-    return !provider.isSearching &&
-        controller.position.pixels == controller.position.maxScrollExtent;
+    if (provider.isSearching || provider.isLoading) return false;
+
+    // Calculate the threshold (80% of total scroll extent)
+    final threshold = controller.position.maxScrollExtent * 0.8;
+
+    // Check if we've scrolled past the threshold
+    return controller.position.pixels >= threshold;
   }
 }

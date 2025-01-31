@@ -162,4 +162,6 @@ class PostProvider extends ChangeNotifier {
   }
 
   bool get isSearching => _state.searchQuery.isNotEmpty;
+
+  bool get isLoading => _state.isLoading;
 }
