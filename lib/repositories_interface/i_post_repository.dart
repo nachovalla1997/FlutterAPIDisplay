@@ -3,14 +3,23 @@ import 'package:flutter_api_display/models/post_model.dart';
 import 'package:flutter_api_display/models/pure_manufacture/get_post_filter.dart';
 
 /// An interface defining the contract for repositories that handle post-related operations.
-/// ```
 abstract class IPostRepository {
-  /// Retrieves a list of all available posts.
+  /// Retrieves a paginated list of posts.
+  ///
+  /// Parameters:
+  /// * [page] - The page number to retrieve (starts at 1)
+  /// * [limit] - The maximum number of posts to retrieve per page
   ///
   /// Returns a [Future<Result<List<Post>>>] that will complete with either:
   /// * [Success] containing a list of posts if the operation succeeds
   /// * [Failure] containing an error if the operation fails
-  Future<Result<List<Post>>> getPosts();
+  Future<Result<List<Post>>> getPosts({
+    /// The page number to retrieve
+    required int page,
+
+    /// The number of posts to retrieve
+    required int limit,
+  });
 
   /// Retrieves a single post based on the provided filter criteria.
   ///
