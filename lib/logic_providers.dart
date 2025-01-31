@@ -48,7 +48,7 @@ class LogicProviders {
   }) =>
       MultiProvider(
         providers: [
-          Provider<PostProvider>(
+          ChangeNotifierProvider<PostProvider>(
             create: (context) => PostProvider(
               postRepository: context.read<JsonPlaceholderRepository>(),
             ),
